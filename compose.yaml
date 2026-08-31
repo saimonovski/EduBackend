@@ -1,0 +1,7 @@
+﻿services:
+  edubackend:
+    image: edubackend
+    build:
+      context: .
+      dockerfile: EduBackend/Dockerfile
+
