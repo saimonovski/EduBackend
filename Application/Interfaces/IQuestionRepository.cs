@@ -8,5 +8,7 @@ public interface IQuestionRepository
     Task<Question> Remove(Question question);
     Task<Question> GetById(int id);
     Task<IEnumerable<Question>> GetAll();
+
+    Task<IEnumerable<Question>> GetAllById(int[] id);
     
 }

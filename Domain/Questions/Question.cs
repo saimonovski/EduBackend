@@ -1,14 +1,13 @@
 ﻿namespace Domain.Questions;
 
-public abstract class Question
+public abstract class Question(int id)
 {
-    private int Id { get; }
-    private string QuestionContext { get; }
-    private List<Question> Items { get; }
-    private QuestionMetadata Metadata { get; set; }
+    public int Id { get; } = id;
+    public string QuestionContext { get; set; } = "";
+    public List<Question> Items { get; set; } = [];
+    public QuestionMetadata Metadata { get; set; } = new();
 
-   public abstract Task<bool> CheckAnswer(string answer);
-   public abstract Task<bool> CheckAnswers(string[] answer);
-   
+    public abstract bool CheckAnswers(string[] answer);
    
 }
+

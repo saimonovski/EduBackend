@@ -6,8 +6,7 @@ namespace Application.Interfaces;
 
 public interface IQuestionService
 {
-    Task<bool> CheckAnswers(string[] answer);
+    Task<bool> CheckAnswers(int questionId,params string[] answer);
     Task<List<Question>> GenerateQuestions(int number, Category category, int difficulty, Category[] subcategories);
-    
     
 }

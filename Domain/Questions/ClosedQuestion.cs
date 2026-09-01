@@ -1,24 +1,36 @@
 ﻿namespace Domain.Questions;
 
-public class ClosedQuestion : Question
+public class ClosedQuestion(int id) : Question(id)
 {
-    public List<string> Answers { get; set; }
-    public List<string> CorrectAnswers { get; set; }
+    public List<string> Answers { get; set; } = [];
+    public List<string> CorrectAnswers { get; set; } = [];
 
-    public override Task<bool> CheckAnswer(string answer)
+   
+
+    public override bool CheckAnswers(string[] answer)
     {
-        //todo zwaliduj stringa (usun wszystkie znaki biale i doprowadz do lowercase) i zwaliduj CorrectAnswers
-        // todo sprawdz czy podana odpowiedz to jedna z CorrectAnswers
-        throw new NotImplementedException();
-    }
+        if (answer.Length == 0 || CorrectAnswers.Count == 0)
+            return false;
+        
+        var normalizedUserAnswers = answer
+            .Where(a => !string.IsNullOrWhiteSpace(a))
+            .Select(NormalizeString)
+            .ToHashSet(); 
 
-    public override Task<bool> CheckAnswers(string[] answer)
+ 
+        var normalizedCorrectAnswers = CorrectAnswers
+            .Where(a => !string.IsNullOrWhiteSpace(a))
+            .Select(NormalizeString)
+            .ToHashSet();
+
+     
+        return normalizedUserAnswers.Any(normalizedCorrectAnswers.Contains);    }
+
+    private static string NormalizeString(string input)
     {
-        //todo zwaliduj stringa (usun wszystkie znaki biale i doprowadz do lowercase) i zwaliduj CorrectAnswers
-        // todo sprawdz czy podana odpowiedz to jedna z CorrectAnswers
-        throw new NotImplementedException();
+        var cleaned = new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray());
+        return cleaned.ToLowerInvariant();
     }
-
 
     
 }
