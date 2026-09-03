@@ -9,11 +9,3 @@ public record QuestionDto(
     string SerializedItemsId,
     QuestionMetadata QuestionMetadata
 );
-
-
-
-public enum QuestionType
-{
-    Open,
-    Closed
-}

@@ -42,10 +42,7 @@ public class MockQuestionRepository : IQuestionRepository
     public Task<IEnumerable<Question>> GetAllById(int[] id)
     {
         List<Question> questions = [];
-        foreach (int key in id)
-        {
-            questions.Add(_questions[key]);
-        }
+        questions.AddRange(id.Select(key => _questions[key]));
 
         return Task.FromResult<IEnumerable<Question>>(questions);
     }

@@ -5,7 +5,7 @@ using Infrastructure.Services;
 namespace EduBackend_Test.ClosedQuestionTests;
 
 
-public class Test1
+public class TestChecking
 {
     private  IQuestionRepository _questionRepository;
     private  IQuestionService _questionService;
