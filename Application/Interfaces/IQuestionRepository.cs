@@ -1,14 +1,16 @@
-﻿using Domain.Questions;
+﻿using Application.Entity;
+using Domain.Questions;
 
 namespace Application.Interfaces;
 
 public interface IQuestionRepository
 {
-    Task<Question> Update(Question question);
-    Task<Question> Remove(Question question);
-    Task<Question> GetById(int id);
-    Task<IEnumerable<Question>> GetAll();
+    Task<Result<Question>> UpdateAsync(Question question);
+    Task RemoveAsync(Question question);
+    Task<Result<Question>> RemoveAsync(int id);
+    Task<Result<Question>> GetById(int id);
+    Task<Result<IEnumerable<Question>>> GetAll();
 
-    Task<IEnumerable<Question>> GetAllById(int[] id);
+    Task<Result<IEnumerable<Question>>> GetAllByIds(int[] id);
     
 }

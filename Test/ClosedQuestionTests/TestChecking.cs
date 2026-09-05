@@ -32,14 +32,14 @@ public class TestChecking
         mainQuestion.CorrectAnswers.Add("correct");
         mainQuestion.CorrectAnswers.Add("correct2");
         
-       await _questionRepository.Update(mainQuestion);
-       await  _questionRepository.Update(subQuestion);
+       await _questionRepository.UpdateAsync(mainQuestion);
+       await  _questionRepository.UpdateAsync(subQuestion);
 
-       var answer1 = await _questionService.CheckAnswers(mainQuestion.Id, "cor rect");
-       var answer2 = await _questionService.CheckAnswers(mainQuestion.Id, "Correct2");
-       var answer3 = await _questionService.CheckAnswers(mainQuestion.Id, "correct");
-       var answer4 = await _questionService.CheckAnswers(mainQuestion.Id, "correct");
-       var answer5 = await _questionService.CheckAnswers(subQuestion.Id, "correct ");
+       var answer1 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "cor rect");
+       var answer2 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "Correct2");
+       var answer3 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "correct");
+       var answer4 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "correct");
+       var answer5 = await _questionService.CheckAnswersAsync(subQuestion.Id, "correct ");
       
         Assert.Multiple( () =>
         {
@@ -65,12 +65,12 @@ public class TestChecking
         mainQuestion.CorrectAnswers.Add("correct");
         mainQuestion.CorrectAnswers.Add("correct2");
     
-        await _questionRepository.Update(mainQuestion);
-        await _questionRepository.Update(subQuestion);
+        await _questionRepository.UpdateAsync(mainQuestion);
+        await _questionRepository.UpdateAsync(subQuestion);
     
-        var answer1 = await _questionService.CheckAnswers(mainQuestion.Id, "Incorrect");
-        var answer2 = await _questionService.CheckAnswers(mainQuestion.Id, "incorrect2 ");
-        var answer3 = await _questionService.CheckAnswers(subQuestion.Id, "incorrect");
+        var answer1 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "Incorrect");
+        var answer2 = await _questionService.CheckAnswersAsync(mainQuestion.Id, "incorrect2 ");
+        var answer3 = await _questionService.CheckAnswersAsync(subQuestion.Id, "incorrect");
     
         Assert.Multiple(() =>
         {

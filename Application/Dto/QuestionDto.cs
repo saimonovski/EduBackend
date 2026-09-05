@@ -7,5 +7,5 @@ public record QuestionDto(
     QuestionType QuestionType,
     string QuestionContext,
     string SerializedItemsId,
-    QuestionMetadata QuestionMetadata
+    QuestionMetadata QuestionMetadata //todo add answers, todo change this to dao and category dto also to dao. Implement proper DTO objects
 );

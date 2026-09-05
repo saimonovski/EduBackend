@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using Application.Dto;
+using Application.Entity;
 using Application.Interfaces;
 using Domain.Questions;
 
@@ -8,24 +9,30 @@ namespace Application.Mappings;
 public class QuestionMapper(IQuestionRepository questionRepository)
 {
 
-    public async Task<Question> ToDomain(QuestionDto dto)
+    public async Task<Result<Question>> ToDomain(QuestionDto dto)
     {
-       var enumerable = await questionRepository.GetAllById(DeserializeItemsId(dto.SerializedItemsId).ToArray());
-
+       var result = await questionRepository.GetAllByIds(DeserializeItemsId(dto.SerializedItemsId).ToArray());
+       if (!result.IsSuccess)
+       {
+           return Result<Question>.Failure(result.ErrorMessage);
+       }
+       var enumerable = result.Value!;
+       
        var id = dto.QuestionId;
+       
        var question = QuestionFactory(id, dto.QuestionType);
        
        question.QuestionContext = dto.QuestionContext;
        question.Metadata = dto.QuestionMetadata;
        question.Items = enumerable.ToList();
     
-       return question;
+       return Result<Question>.Success(question);
     }
 
     private List<int> DeserializeItemsId(string serializedItems)
     {
-        string[] deserializedItems = serializedItems.Split(',');
-        List<int> items = new List<int>();
+        var deserializedItems = serializedItems.Split(',');
+        var items = new List<int>();
         foreach (var item in deserializedItems)
         {
                 if (int.TryParse(item, out int itemId))
@@ -40,15 +47,12 @@ public class QuestionMapper(IQuestionRepository questionRepository)
 
     private Question QuestionFactory(int id, QuestionType type)
     {
-        
-        switch (type)
+        return type switch
         {
-            case QuestionType.Closed: return new ClosedQuestion(id);
-            case QuestionType.Open: return new OpenQuestion(id);
-            default:
-                throw new ArgumentOutOfRangeException("Logic for that option is not defined"+type);
-        }
-        
+            QuestionType.Closed => new ClosedQuestion(id),
+            QuestionType.Open => new OpenQuestion(id),
+            _ => throw new ArgumentOutOfRangeException("Logic for that option is not defined" + type)
+        };
     }
     
 }

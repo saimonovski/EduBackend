@@ -1,4 +1,5 @@
-﻿using Domain.Questions;
+﻿using Application.Interfaces;
+using Domain.Questions;
 using FastEndpoints;
 
 namespace Api.Controllers;
@@ -6,8 +7,9 @@ namespace Api.Controllers;
 
 public record QuestionRequest(int Id);
 
-public class GetQuestionEndpoint : Endpoint<QuestionRequest,Question>
+public class GetQuestionEndpoint(IQuestionRepository repository) : Endpoint<QuestionRequest, Question>
 {
+
     public override void Configure()
     {
         Get("api/questions/{Id}");
@@ -16,7 +18,7 @@ public class GetQuestionEndpoint : Endpoint<QuestionRequest,Question>
 
     public override async Task HandleAsync(QuestionRequest questionRequest, CancellationToken ct)
     {
-        var question = new ClosedQuestion(questionRequest.Id);
+        var question = await repository.GetById(questionRequest.Id);
         await Send.OkAsync(question, ct);
     }
 }

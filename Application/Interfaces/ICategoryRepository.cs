@@ -1,12 +1,13 @@
-﻿using Domain.Categories;
+﻿using Application.Entity;
+using Domain.Categories;
 
 namespace Application.Interfaces;
 
 public interface ICategoryRepository
 {
-    Task<Category> Add(Category category);
-    Task<Category> Update(Category category);
-    Task<Category> Delete(int id);
-    Task<Category> GetById(int id);
-    Task<IEnumerable<Category>> GetAll();
+    Task AddAsync(Category category);
+    Task UpdateAsync(Category category);
+    Task<Result<Category>> DeleteAsync(int id);
+    Result<Category> GetByIdAsync(int id);
+    Task<IEnumerable<Result<Category>>> GetAllAsync();
 }

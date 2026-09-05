@@ -1,29 +1,30 @@
-﻿using Application.Interfaces;
+﻿using Application.Entity;
+using Application.Interfaces;
 using Domain.Categories;
 using Domain.Questions;
 
 namespace Infrastructure.Services;
 
-public class QuestionService : IQuestionService
+public class QuestionService(IQuestionRepository questionRepository) : IQuestionService
 {
-    IQuestionRepository _questionRepository;
-
-    public QuestionService(IQuestionRepository questionRepository)
+    public async Task<Result<bool>> CheckAnswersAsync(int questionId , params string[] answers)
     {
-        _questionRepository = questionRepository;
+        var questionResult = await questionRepository.GetById(questionId);
+
+        if (!questionResult.IsSuccess)
+        {
+            return Result<bool>.Failure(questionResult.ErrorMessage);
+        }
+        
+        var question = questionResult.Value!;
+        
+        return Result<bool>.Success(question.CheckAnswers(answers));
     }
 
-    public async Task<bool> CheckAnswers(int questionId , params string[] answers)
+    public Task<Result<List<Question>>> GenerateQuestionsAsync(int number, Category category, int difficulty, Category[] subcategories)
     {
-        var task = _questionRepository.GetById(questionId);
         
-        Question question = await task;
-        
-       return question.CheckAnswers(answers);
-    }
-
-    public Task<List<Question>> GenerateQuestions(int number, Category category, int difficulty, Category[] subcategories)
-    {
         throw new NotImplementedException();
     }
-}
+    
+} 
