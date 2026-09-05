@@ -1,6 +1,7 @@
 ﻿using Application.Entity;
 using Application.Interfaces;
 using Domain.Questions;
+using EduBackend_Test.ClosedQuestionTests;
 
 namespace EduBackend_Test;
 
@@ -14,9 +15,33 @@ In-memory state pobierany przez referencję:
 GetAllAsync() zwraca bezpośrednio _questions.Values. Modyfikacja obiektu pobranego z listy zmieni go bezpośrednio w słowniku (co w testach jest ok, ale warto o tym pamiętać).
  */
 
+
+
 public class MockQuestionRepository : IQuestionRepository
 {
-     private readonly Dictionary<int, Question> _questions = new();
+     private  readonly Dictionary<int, Question> _questions = new();
+
+     public MockQuestionRepository()
+     {
+         var mainQuestion = TestClosedQuestion.Create();
+         var mainQuestion2 = TestClosedQuestion.Create();
+         var mainQuestion3 = TestClosedQuestion.Create();
+
+         var subQuestion = TestClosedQuestion.Create();
+         subQuestion.Answers = ["incorrect", "correct", "incorrect2"];
+         subQuestion.CorrectAnswers.Add("correct");
+
+
+         mainQuestion.Items.Add(subQuestion);
+         mainQuestion.Answers = ["incorrect", "correct", "incorrect2", "incorrect3", "correct2"];
+         mainQuestion.CorrectAnswers.Add("correct");
+         mainQuestion.CorrectAnswers.Add("correct2");
+        
+          UpdateAsync(mainQuestion);
+          UpdateAsync(mainQuestion2);
+          UpdateAsync(mainQuestion3);
+           UpdateAsync(subQuestion);
+     }
     
     public  Task<Result<Question>> UpdateAsync(Question question)
     {
@@ -37,7 +62,7 @@ public class MockQuestionRepository : IQuestionRepository
         return Task.FromResult(Result<Question>.Success(removed));
     }
 
-    public Task<Result<Question>> GetById(int id)
+    public Task<Result<Question>> GetByIdAsync(int id)
     {
         return Task.FromResult( Result<Question>.Success(_questions[id]));
     }
@@ -47,7 +72,7 @@ public class MockQuestionRepository : IQuestionRepository
         return Task.FromResult(Result<IEnumerable<Question>>.Success(_questions.Values));
     }
 
-    public Task<Result<IEnumerable<Question>>> GetAllByIds(int[] ids)
+    public Task<Result<IEnumerable<Question>>> GetAllByIdsAsync(int[] ids)
     {
         List<Question> questions = [];
         questions.AddRange(ids.Select(key => _questions[key]));

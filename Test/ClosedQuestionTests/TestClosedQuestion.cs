@@ -4,7 +4,7 @@ namespace EduBackend_Test.ClosedQuestionTests;
 
 public class TestClosedQuestion(int id) : ClosedQuestion(id)
 {
-    private static int _count ;
+    private static int _count = 0;
     
     public static TestClosedQuestion Create()
     {

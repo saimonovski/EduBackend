@@ -43,11 +43,11 @@ public class TestChecking
       
         Assert.Multiple( () =>
         {
-            Assert.That(answer1);
-            Assert.That(answer2);
-            Assert.That(answer3);
-            Assert.That(answer4);
-            Assert.That(answer5);
+            Assert.That(answer1.Value);
+            Assert.That(answer2.Value);
+            Assert.That(answer3.Value);
+            Assert.That(answer4.Value);
+            Assert.That(answer5.Value);
         });
     }
    
@@ -74,9 +74,9 @@ public class TestChecking
     
         Assert.Multiple(() =>
         {
-            Assert.That(answer1, Is.False);
-            Assert.That(answer2, Is.False);
-            Assert.That(answer3, Is.False);
+            Assert.That(answer1.Value, Is.False);
+            Assert.That(answer2.Value, Is.False);
+            Assert.That(answer3.Value, Is.False);
         });
     }
         

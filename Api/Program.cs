@@ -13,8 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerDocument();
 
-builder.Services.AddSingleton<IQuestionService, QuestionService>();
-builder.Services.AddScoped<IQuestionRepository,  MockQuestionRepository>();
+builder.Services.AddSingleton<IQuestionRepository,  MockQuestionRepository>();
+
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 
 var app = builder.Build();
 

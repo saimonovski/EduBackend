@@ -3,9 +3,10 @@
 namespace Domain.Questions;
 
 
+/*
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(ClosedQuestion), typeDiscriminator: "closed")]
-[JsonDerivedType(typeof(OpenQuestion), typeDiscriminator: "open")]
+[JsonDerivedType(typeof(OpenQuestion), typeDiscriminator: "open")]*/
 public abstract class Question(int id)
 {
     public int Id { get; } = id;

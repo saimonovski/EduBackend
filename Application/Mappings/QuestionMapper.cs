@@ -11,7 +11,7 @@ public class QuestionMapper(IQuestionRepository questionRepository)
 
     public async Task<Result<Question>> ToDomain(QuestionDto dto)
     {
-       var result = await questionRepository.GetAllByIds(DeserializeItemsId(dto.SerializedItemsId).ToArray());
+       var result = await questionRepository.GetAllByIdsAsync(DeserializeItemsId(dto.SerializedItemsId).ToArray());
        if (!result.IsSuccess)
        {
            return Result<Question>.Failure(result.ErrorMessage);
