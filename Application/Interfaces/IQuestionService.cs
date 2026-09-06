@@ -12,7 +12,7 @@ public interface IQuestionService
     Task<Result<List<Question>>> GenerateQuestionsAsync(int number, Category category, int difficulty,
         Category[] subcategories);
     Task<Result<Question>> GetQuestionAsync(int questionId);
-
+    Task<Result<IEnumerable<Question>>> GetQuestionsAsync(int[] questionId);
 
     Task<Result<IEnumerable<Question>>> GetAllQuestionsAsync();
 }

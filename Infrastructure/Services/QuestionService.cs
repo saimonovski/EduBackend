@@ -1,4 +1,5 @@
-﻿using Application.Entity;
+﻿using System.Collections;
+using Application.Entity;
 using Application.Interfaces;
 using Domain.Categories;
 using Domain.Questions;
@@ -49,6 +50,11 @@ public class QuestionService(IQuestionRepository questionRepository) : IQuestion
     public Task<Result<Question>> GetQuestionAsync(int questionId)
     {
         return questionRepository.GetByIdAsync(questionId);
+    }
+
+    public Task<Result<IEnumerable<Question>>> GetQuestionsAsync(int[] questionId)
+    {
+        return questionRepository.GetAllByIdsAsync(questionId);
     }
 
     public Task<Result<IEnumerable<Question>>> GetAllQuestionsAsync()

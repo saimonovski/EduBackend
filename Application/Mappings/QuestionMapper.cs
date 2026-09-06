@@ -6,53 +6,91 @@ using Domain.Questions;
 
 namespace Application.Mappings;
 
-public class QuestionMapper(IQuestionRepository questionRepository)
+public record QuestionDao(
+    int QuestionId,
+    QuestionType QuestionType,
+    string QuestionContext,
+    List<int> ItemsId,
+    QuestionMetadata QuestionMetadata //todo add answers, 
+);
+
+public record QuestionDto(
+    int Id,
+    QuestionType Type,
+    string QuestionContext,
+    List<QuestionDto> Items,
+    QuestionMetadata QuestionMetadata
+);
+
+public record ClosedQuestionDao(int Id, QuestionType QuestionType, string QuestionContext, List<int> ItemsId, QuestionMetadata QuestionMetadata, List<string> Answers, List<string> CorrectAnswers): QuestionDao(Id, QuestionType,QuestionContext, ItemsId, QuestionMetadata);
+public record ClosedQuestionDto(int Id, QuestionType QuestionType, string QuestionContext, List<QuestionDto> Items, QuestionMetadata QuestionMetadata, List<string> Answers): QuestionDto(Id, QuestionType,QuestionContext,Items, QuestionMetadata);
+
+
+public static class QuestionMapper
 {
-
-    public async Task<Result<Question>> ToDomain(QuestionDto dto)
+    public static QuestionDto CreateQuestionDto(Question question)
     {
-       var result = await questionRepository.GetAllByIdsAsync(DeserializeItemsId(dto.SerializedItemsId).ToArray());
-       if (!result.IsSuccess)
-       {
-           return Result<Question>.Failure(result.ErrorMessage);
-       }
-       var enumerable = result.Value!;
-       
-       var id = dto.QuestionId;
-       
-       var question = QuestionFactory(id, dto.QuestionType);
-       
-       question.QuestionContext = dto.QuestionContext;
-       question.Metadata = dto.QuestionMetadata;
-       question.Items = enumerable.ToList();
+        return QuestionDtoFactory(question);
+    }
+    public static List<QuestionDto> CreateQuestionDto(List<Question> questions)
+    {
+        return questions.Select(CreateQuestionDto).ToList();
+    }
+    public static QuestionDao ToDao(Question question)
+    {
+       return QuestionDaoFactory(question);
+    }
     
-       return Result<Question>.Success(question);
+    
+    public static Question ToDomain(QuestionDao dao, List<Question> subquestions)
+    {
+        ArgumentNullException.ThrowIfNull(subquestions);
+        
+       return QuestionFactory( dao, subquestions);
     }
 
-    private List<int> DeserializeItemsId(string serializedItems)
+    private static QuestionDao QuestionDaoFactory(Question question)
     {
-        var deserializedItems = serializedItems.Split(',');
-        var items = new List<int>();
-        foreach (var item in deserializedItems)
-        {
-                if (int.TryParse(item, out int itemId))
-                {
-                    items.Add(itemId);
-                }
-            
-        }
+        var convertedItems = question.Items.Select(x => x.Id).ToList();
 
-        return items;
-    }
-
-    private Question QuestionFactory(int id, QuestionType type)
-    {
-        return type switch
+        return question switch
         {
-            QuestionType.Closed => new ClosedQuestion(id),
-            QuestionType.Open => new OpenQuestion(id),
-            _ => throw new ArgumentOutOfRangeException("Logic for that option is not defined" + type)
+            ClosedQuestion closed => new ClosedQuestionDao(closed.Id, closed.Type, closed.QuestionContext,
+                convertedItems, closed.Metadata, closed.Answers, closed.CorrectAnswers),
+            _ => new QuestionDao(question.Id, question.Type, question.QuestionContext,
+                convertedItems, question.Metadata)
         };
     }
+    
+    private static QuestionDto QuestionDtoFactory(Question question)
+    {
+        var convertedItems = question.Items.Select(CreateQuestionDto).ToList();
+        return question switch
+        {
+            ClosedQuestion closed => new ClosedQuestionDto(closed.Id, closed.Type, closed.QuestionContext,
+                convertedItems, closed.Metadata, closed.Answers),
+            _ => new QuestionDto(question.Id, question.Type, question.QuestionContext,
+                convertedItems, question.Metadata)
+        };
+    }
+
+    private static  Question QuestionFactory(QuestionDao dao, List<Question> subquestions)
+    {
+        return dao switch
+        {
+            ClosedQuestionDao closed =>
+
+                new ClosedQuestion(closed.Id)
+                {
+                    Answers = closed.Answers,
+                    CorrectAnswers = closed.CorrectAnswers,
+                    Items = subquestions
+                },
+            _ => throw new ArgumentOutOfRangeException("Not implemented functionality for this type: " + dao.QuestionType)
+        };
+
+
+    }
+    
     
 }

@@ -1,6 +1,8 @@
-﻿namespace Domain.Questions;
+﻿using Application.Dto;
 
-public class ClosedQuestion(int id) : Question(id)
+namespace Domain.Questions;
+
+public class ClosedQuestion(int id) : Question(id, QuestionType.Closed)
 {
     public List<string> Answers { get; set; } = [];
     public List<string> CorrectAnswers { get; set; } = [];

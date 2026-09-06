@@ -1,6 +1,8 @@
-﻿namespace Domain.Questions;
+﻿using Application.Dto;
 
-public class OpenQuestion(int id) : Question(id)
+namespace Domain.Questions;
+
+public class OpenQuestion(int id) : Question(id, QuestionType.Open)
 {
     //todo
     public override bool CheckAnswers(string[] answer)

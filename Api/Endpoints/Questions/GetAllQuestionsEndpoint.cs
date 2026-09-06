@@ -1,10 +1,11 @@
 ﻿using Application.Interfaces;
+using Application.Mappings;
 using FastEndpoints;
 
 namespace Api.Endpoints.Questions;
 
 
-public class GetAllQuestionsEndpoint(IQuestionService service) : EndpointWithoutRequest<List<Domain.Questions.Question>>
+public class GetAllQuestionsEndpoint(IQuestionService service) : EndpointWithoutRequest<List<QuestionDto>>
 {
 
     public override void Configure()
@@ -24,6 +25,6 @@ public class GetAllQuestionsEndpoint(IQuestionService service) : EndpointWithout
         }
 
         var questions = result.Value!;
-        await Send.OkAsync(questions.ToList(), ct);
+        await Send.OkAsync(QuestionMapper.CreateQuestionDto(questions.ToList()), ct);
     }
 }

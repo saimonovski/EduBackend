@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Application.Mappings;
 using FastEndpoints;
 
 namespace Api.Endpoints.Questions;
@@ -6,7 +7,7 @@ namespace Api.Endpoints.Questions;
 
 public  record QuestionRequest(int Id);
 
-public class GetQuestionEndpoint(IQuestionService service) : Endpoint<QuestionRequest, Domain.Questions.Question>
+public class GetQuestionEndpoint(IQuestionService service) : Endpoint<QuestionRequest, QuestionDto>
 {
 
     public override void Configure()
@@ -26,6 +27,7 @@ public class GetQuestionEndpoint(IQuestionService service) : Endpoint<QuestionRe
         }
 
         var question = result.Value!;
-        await Send.OkAsync(question, ct);
+        
+        await Send.OkAsync(QuestionMapper.CreateQuestionDto(question), ct);
     }
 }
