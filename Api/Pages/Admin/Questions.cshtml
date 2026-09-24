@@ -1,0 +1,76 @@
+﻿@page
+@model Api.Pages.Admin.Questions
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Zarządzanie pytaniami";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Zarządzanie pytaniami</h2>
+    <a asp-page="/Admin/Index" class="btn btn-outline-secondary">← Powrót do pulpitu</a>
+</div>
+
+<!-- Formularz dodawania nowego pytania -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Dodaj nowe pytanie</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+
+                <label class="form-label">Id</label>
+                <input type="number" asp-for="NewId" name="NewId" class="form-control" placeholder="Wprowadz Id..." required/>
+
+                <label class="form-label">Treść pytania</label>
+                <input type="text" asp-for="NewQuestionContent" name="NewQuestionContent" class="form-control" placeholder="Wpisz treść pytania..." required/>
+            </div>
+            <button type="submit" class="btn btn-success">Zapisz pytanie</button>
+        </form>
+    </div>
+</div>
+
+<!-- Tabela z listą pytań -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Lista pytań</h5>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Treść pytania</th>
+                    <th style="width: 120px;" class="text-end">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.QuestionList.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted p-3">Brak pytań w bazie.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var q in Model.QuestionList)
+                    {
+                        <tr>
+                            <td>@q.Id</td>
+                            <td>@q.QuestionContext</td>
+                            <td class="text-end">
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@q.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Czy na pewno usunąć?');">
+                                        Usuń
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

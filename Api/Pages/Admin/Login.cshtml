@@ -1,0 +1,36 @@
+﻿@page
+@model Api.Pages.Admin.Login
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Logowanie";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Logowanie Admina</h3>
+
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger">@Model.ErrorMessage</div>
+                }
+
+                <!-- ZMIANA: Zwykły method="post" wysyła dane na aktualny URL strony -->
+                <form method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">Email / Login</label>
+                        <input type="text" name="Email" asp-for="Email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hasło</label>
+                        <input type="password" name="Password" asp-for="Password" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Zaloguj się</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

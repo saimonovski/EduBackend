@@ -30,7 +30,9 @@ public class MockQuestionRepository : IQuestionRepository
          var subQuestion = TestClosedQuestion.Create();
          subQuestion.Answers = ["incorrect", "correct", "incorrect2"];
          subQuestion.CorrectAnswers.Add("correct");
-
+         subQuestion.QuestionContext = "test";
+         mainQuestion2.QuestionContext = "test";
+         mainQuestion3.QuestionContext = "test";
 
          mainQuestion.Items.Add(subQuestion);
          mainQuestion.Answers = ["incorrect", "correct", "incorrect2", "incorrect3", "correct2"];

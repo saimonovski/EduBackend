@@ -2,6 +2,7 @@
 
 using Application.Interfaces;
 using Domain.Categories;
+using Domain.Questions;
 using FastEndpoints;
 
 namespace Api.Endpoints.Questions;

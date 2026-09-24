@@ -1,6 +1,4 @@
-﻿using Application.Dto;
-
-namespace Domain.Questions;
+﻿namespace Domain.Questions;
 
 public class OpenQuestion(int id) : Question(id, QuestionType.Open)
 {

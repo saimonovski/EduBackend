@@ -1,0 +1,35 @@
+﻿@page
+@model Api.Pages.Admin.Index
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Pulpit";
+}
+
+<div class="p-4 mb-4 bg-white rounded shadow-sm">
+    <h2>Witaj, @Model.Username! 👋</h2>
+    <p class="text-muted">Wybierz sekcję, którą chcesz zarządzać.</p>
+</div>
+
+<div class="row g-4">
+    <!-- Sekcja: Zarządzanie Pytaniami -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-primary">
+            <div class="card-body text-center">
+                <h5 class="card-title">Pytania</h5>
+                <p class="card-text text-muted">Przeglądaj, dodawaj i edytuj pytania w systemie.</p>
+                <a asp-page="/Questions" class="btn btn-primary">Zarządzaj pytaniami</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Miejsce na kolejne sekcje w przyszłości (np. Kategorie, Użytkownicy) -->
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-secondary opacity-50">
+            <div class="card-body text-center">
+                <h5 class="card-title">Kategorie</h5>
+                <p class="card-text text-muted">Wkrótce dostępne...</p>
+                <button class="btn btn-secondary" disabled>Zarządzaj kategoriami</button>
+            </div>
+        </div>
+    </div>
+</div>
