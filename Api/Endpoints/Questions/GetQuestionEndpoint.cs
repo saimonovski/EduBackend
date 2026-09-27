@@ -22,7 +22,6 @@ public class GetQuestionEndpoint(IQuestionService service) : Endpoint<QuestionRe
         if (!result.IsSuccess)
         {
             await Send.NotFoundAsync(ct);
-            await Console.Error.WriteLineAsync(result.ErrorMessage);
             return;
         }
 

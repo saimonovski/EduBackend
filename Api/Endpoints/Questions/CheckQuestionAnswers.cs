@@ -26,7 +26,6 @@ public class CheckQuestionAnswersEndpoint(IQuestionService service)
         if (!result.IsSuccess)
         {
             await Send.NotFoundAsync(ct);
-            await Console.Error.WriteLineAsync(result.ErrorMessage);
             return;
         }
         

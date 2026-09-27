@@ -7,7 +7,7 @@ public interface ICategoryRepository
 {
     Task AddAsync(Category category);
     Task UpdateAsync(Category category);
-    Task<Result<Category>> DeleteAsync(int id);
-    Result<Category> GetByIdAsync(int id);
-    Task<IEnumerable<Result<Category>>> GetAllAsync();
+    Task<Category?> DeleteAsync(int id);
+    Task<Category?> GetByIdAsync(int id);
+    Task<IEnumerable<Category>?> GetAllAsync();
 }

@@ -11,7 +11,7 @@ public class GetAllQuestionsEndpoint(IQuestionService service) : EndpointWithout
     public override void Configure()
     {
         Get("api/questions/all");
-        AllowAnonymous();
+        
     }
 
     public override async Task HandleAsync(CancellationToken ct)
@@ -20,7 +20,6 @@ public class GetAllQuestionsEndpoint(IQuestionService service) : EndpointWithout
         if (!result.IsSuccess)
         {
             await Send.NotFoundAsync(ct);
-            await Console.Error.WriteLineAsync(result.ErrorMessage);
             return;
         }
 

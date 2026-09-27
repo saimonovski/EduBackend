@@ -1,7 +1,11 @@
 ﻿namespace Domain.Questions;
 
-public class ClosedQuestion(int id) : Question(id, QuestionType.Closed)
+public class ClosedQuestion : Question
 {
+    public ClosedQuestion()
+    {
+        Type =  QuestionType.Closed;
+    }
     public List<string> Answers { get; set; } = [];
     public List<string> CorrectAnswers { get; set; } = [];
 

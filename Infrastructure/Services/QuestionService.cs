@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿
 using Application.Entity;
 using Application.Interfaces;
 using Domain.Categories;
@@ -8,57 +8,81 @@ namespace Infrastructure.Services;
 
 public class QuestionService(IQuestionRepository questionRepository) : IQuestionService
 {
-    public async Task<Result<bool>> CheckAnswersAsync(int questionId , params string[] answers)
+    public async Task<Result<bool>> CheckAnswersAsync(int questionId, params string[] answers)
     {
-        var questionResult = await questionRepository.GetByIdAsync(questionId);
+        var question = await questionRepository.GetByIdAsync(questionId);
 
-        if (!questionResult.IsSuccess)
+        if (question is null)
         {
-            return Result<bool>.Failure(questionResult.ErrorMessage);
+            return Result<bool>.Failure(["Question not found"]);
         }
-        
-        var question = questionResult.Value!;
-        
+
         return Result<bool>.Success(question.CheckAnswers(answers));
     }
 
-    public async Task<Result<Dictionary<int,bool>>> CheckAnswersAsync(Dictionary<int, string[]> questionsAnswers)
+    public async Task<Result<Dictionary<int, bool>>> CheckAnswersAsync(
+        Dictionary<int, string[]> questionsAnswers)
     {
-         var keys = questionsAnswers.Keys.ToArray();
-         var databaseResult = await questionRepository.GetAllByIdsAsync(keys);
+        var ids = questionsAnswers.Keys.ToArray();
+        var questions = (await questionRepository.GetAllByIdsAsync(ids)).ToList();
 
-         if (!databaseResult.IsSuccess)
-         {
-             return Result<Dictionary<int, bool>>.Failure(databaseResult.ErrorMessage);
-         }
-         
-         var checkedAnswers = new Dictionary<int, bool>();
-         
-         var questions = databaseResult.Value!.ToList();
-         questions.ForEach((question =>
-             checkedAnswers.Add(question.Id,question.CheckAnswers(questionsAnswers[question.Id]))
-         ));
-         return  Result<Dictionary<int,bool>>.Success(checkedAnswers);
+        if (questions.Count != ids.Length)
+        {
+            return Result<Dictionary<int, bool>>.Failure(
+                ["One or more questions were not found"]);
+        }
+
+        var checkedAnswers = new Dictionary<int, bool>();
+
+        foreach (var question in questions)
+        {
+            checkedAnswers.Add(
+                question.Id,
+                question.CheckAnswers(questionsAnswers[question.Id])
+            );
+        }
+
+        return Result<Dictionary<int, bool>>.Success(checkedAnswers);
     }
 
-    public Task<Result<List<Question>>> GenerateQuestionsAsync(int number, Category category, int difficulty, Category[] subcategories)
+    public Task<Result<List<Question>>> GenerateQuestionsAsync(
+        int number,
+        Category category,
+        int difficulty,
+        Category[] subcategories)
     {
-        
         throw new NotImplementedException();
     }
 
-    public Task<Result<Question>> GetQuestionAsync(int questionId)
+    public async Task<Result<Question>> GetQuestionAsync(int questionId)
     {
-        return questionRepository.GetByIdAsync(questionId);
+        var question = await questionRepository.GetByIdAsync(questionId);
+
+        if (question is null)
+        {
+            return Result<Question>.Failure(["Question not found"]);
+        }
+
+        return Result<Question>.Success(question);
     }
 
-    public Task<Result<IEnumerable<Question>>> GetQuestionsAsync(int[] questionId)
+    public async Task<Result<IEnumerable<Question>>> GetQuestionsAsync(int[] questionIds)
     {
-        return questionRepository.GetAllByIdsAsync(questionId);
+        var questions = (await questionRepository.GetAllByIdsAsync(questionIds)).ToList();
+
+        if (questions.Count != questionIds.Length)
+        {
+            return Result<IEnumerable<Question>>.Failure(
+                ["One or more questions were not found"]);
+        }
+
+        return Result<IEnumerable<Question>>.Success(questions);
     }
 
-    public Task<Result<IEnumerable<Question>>> GetAllQuestionsAsync()
+    public async Task<Result<IEnumerable<Question>>> GetAllQuestionsAsync()
     {
-        return questionRepository.GetAll();
+        var questions = await questionRepository.GetAll();
+
+        return Result<IEnumerable<Question>>.Success(questions);
     }
-} 
+}

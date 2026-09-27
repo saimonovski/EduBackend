@@ -2,9 +2,10 @@
 
 public class QuestionMetadata
 {
-    private string GeneratedBy { get; set; }
-    private int Difficulty { get; set; }
-    private Dictionary<string,double> SkillsWeight { get; set; }
-    private DateTime Timestamp { get; set; }
-    private int EstimatedTimeSeconds { get; set; }
+    public int Id { get; set; }
+    /*public string GeneratedBy { get; set; }
+    public int Difficulty { get; set; }
+    public Dictionary<string,double> SkillsWeight { get; set; }
+    public DateTime Timestamp { get; set; }
+    public int EstimatedTimeSeconds { get; set; }*/
 }

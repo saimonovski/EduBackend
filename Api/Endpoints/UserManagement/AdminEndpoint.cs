@@ -1,4 +1,5 @@
-﻿using FastEndpoints;
+﻿using Domain.Users;
+using FastEndpoints;
 
 namespace Api.Pages.Admin;
 
@@ -6,25 +7,16 @@ public class AdminDashboardEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
-        Get("/ad"); // Ścieżka dla admina
-       Roles("admin");
+        Get("/admin"); // Ścieżka dla admina
+        Roles("Admin");
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        string htmlContent = """
-                             <!DOCTYPE html>
-                             <html>
-                             <head><title>Admin Panel</title></head>
-                             <body>
-                             <h1>Panel Administracyjny</h1>
-                             <p>Witaj w panelu!</p>
-                             </body>
-                             </html>
-                             """;
 
-// Zwracamy su rowy HTML
-          
-        await Send.StringAsync(htmlContent,statusCode: 200, contentType: "text/html", cancellation: ct);
+
+       var admin = User.IsInRole("Admin");
+       var user = User.IsInRole("User");
+       await Send.OkAsync("Witaj w panelu administratora czy zalogowano: " + admin + " Czy user: "+user, ct);
     }
 }

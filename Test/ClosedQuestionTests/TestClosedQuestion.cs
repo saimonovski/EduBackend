@@ -2,13 +2,13 @@
 
 namespace EduBackend_Test.ClosedQuestionTests;
 
-public class TestClosedQuestion(int id) : ClosedQuestion(id)
+public class TestClosedQuestion() : ClosedQuestion()
 {
     private static int _count = 0;
     
     public static TestClosedQuestion Create()
     {
         _count++;
-        return new TestClosedQuestion(_count);
+        return new TestClosedQuestion{Id = _count};
     }
 }

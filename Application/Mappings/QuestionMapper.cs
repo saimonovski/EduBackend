@@ -1,8 +1,5 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using Application.Dto;
-using Application.Entity;
-using Application.Interfaces;
 using Domain.Questions;
 
 namespace Application.Mappings;
@@ -39,20 +36,20 @@ public static class QuestionMapper
     {
         return questions.Select(CreateQuestionDto).ToList();
     }
-    public static QuestionDao ToDao(Question question)
+    /*public static QuestionDao ToDao(Question question)
     {
        return QuestionDaoFactory(question);
-    }
+    }*/
     
     
-    public static Question ToDomain(QuestionDao dao, List<Question> subquestions)
+    /*public static Question ToDomain(QuestionDao dao, List<Question> subquestions)
     {
         ArgumentNullException.ThrowIfNull(subquestions);
         
        return QuestionFactory( dao, subquestions);
-    }
+    }*/
 
-    private static QuestionDao QuestionDaoFactory(Question question)
+    /*private static QuestionDao QuestionDaoFactory(Question question)
     {
         var convertedItems = question.Items.Select(x => x.Id).ToList();
 
@@ -63,7 +60,7 @@ public static class QuestionMapper
             _ => new QuestionDao(question.Id, question.Type, question.QuestionContext,
                 convertedItems, question.Metadata)
         };
-    }
+    }*/
     
     private static QuestionDto QuestionDtoFactory(Question question)
     {
@@ -77,23 +74,25 @@ public static class QuestionMapper
         };
     }
 
+    /*
     private static  Question QuestionFactory(QuestionDao dao, List<Question> subquestions)
     {
         return dao switch
         {
             ClosedQuestionDao closed =>
 
-                new ClosedQuestion(closed.Id)
+                new ClosedQuestion()
                 {
+                    Id = closed.Id,
                     Answers = closed.Answers,
                     CorrectAnswers = closed.CorrectAnswers,
                     Items = subquestions
                 },
             _ => throw new ArgumentOutOfRangeException("Not implemented functionality for this type: " + dao.QuestionType)
         };
+        */
 
 
     }
     
     
-}

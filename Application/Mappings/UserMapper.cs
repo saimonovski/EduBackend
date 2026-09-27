@@ -1,29 +1,22 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
-using Application.Dto;
 using Application.Entity;
 using Application.Interfaces;
 using Domain.Questions;
-using Domain.User;
+using Domain.Users;
 using Domain.Util;
 
 namespace Application.Mappings;
 
-public record UserDao(
-    int UserId,
-    string Email,
-    string Username,
-    string Password,
-    UserData UserData
-);
+
 
 public record UserDto(
-    int Id,
-    string Username,
-    string Email,
+    string? Username,
+    string? Email,
     [property: JsonConverter(typeof(JsonStringEnumConverter))]
-    Language Language,
-    string Country
+    Language UserLanguage,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
+    Country UserCountry
 );
 
 
@@ -32,39 +25,15 @@ public static class UserMapper
     public static UserDto CreateUserDto(User user)
     {
         return new UserDto(
-            user.Id,
-            user.Username,
+            user.UserName,
             user.Email,
-            user.UserData.Language,
-            user.UserData.Country
+            user.UserData.UserLanguage,
+            user.UserData.UserCountry
         );
     }
     
    
-    public static UserDao ToDao(User user)
-    {
-        return new UserDao(
-            user.Id,
-            user.Email,
-            user.Username,
-            user.Password,
-            user.UserData
-        );
-    }
-
-    public static User ToDomain(UserDao dao)
-    {
-        return new User(
-           dao.Username,
-           dao.Password,
-           dao.UserId,
-           dao.Email
-        )
-        {
-            UserData =  dao.UserData
-        }
-            ;
-    }
+   
 
 
   

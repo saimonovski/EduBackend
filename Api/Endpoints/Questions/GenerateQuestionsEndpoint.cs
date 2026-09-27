@@ -1,6 +1,6 @@
-﻿using Application.Dto;
-
+﻿using Application.Entity;
 using Application.Interfaces;
+using Application.Mappings;
 using Domain.Categories;
 using Domain.Questions;
 using FastEndpoints;
@@ -9,7 +9,7 @@ namespace Api.Endpoints.Questions;
 
 public  record GeneratorRequest(int Count, int TopicId, QuestionType QuestionType,int Difficulty, int[] SubtopicsIds, bool Save = true);
 
-public class GenerateQuestionsEndpoint(IQuestionService service) : Endpoint<GeneratorRequest, List<Domain.Questions.Question>>
+public class GenerateQuestionsEndpoint(IQuestionService service) : Endpoint<GeneratorRequest, Result<List<Question>>>
 {
 
     public override void Configure()
@@ -25,14 +25,13 @@ public class GenerateQuestionsEndpoint(IQuestionService service) : Endpoint<Gene
         var result = await service.GenerateQuestionsAsync(generatorRequest.Count,category,generatorRequest.Difficulty, categories); //todo create service for categories
         if (!result.IsSuccess)
         {
-            await Send.ErrorsAsync(400,ct);
-            await Console.Error.WriteLineAsync(result.ErrorMessage);
+            await Send.ResponseAsync(Result<List<Question>>.Failure(result.ErrorMessage), 400, ct);
             return;
         }
 
         var questions = result.Value!;
         
         
-        await Send.OkAsync(questions, ct);
+        await Send.OkAsync(Result<List<Question>>.Success(questions), ct);
     }
 }

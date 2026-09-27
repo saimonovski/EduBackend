@@ -1,27 +1,31 @@
 ﻿using Application.Entity;
 using Domain.Categories;
 using Domain.Questions;
-using Domain.User;
+using Domain.Users;
 
 namespace Application.Users;
 
 public interface IUserService
 {
-    Task<Result<User>> FindUserByIdAsync(int userId);
-    Task<Result<List<User>>> GetAllUsersAsync();
+
+    Task<IEnumerable<string>> GetRolesAsync(User user);
+     Task<User?> FindUserByEmailAsync(string userEmail);
+     Task<User?> FindUserByIdlAsync(string userId);
+    Task<List<User>> GetAllUsersAsync();
     
-    Task<Result<User>> CreateUserAsync(User user);
-    Task GetQuestionForUserAsync(int userId, Question question, Category category);
+    Task<Result<User>> CreateUserAsync(User user, string password);
     
-    Task<Result<bool>> DeleteUserAsync(int userId);
-    Task<Result<bool>> CheckPassword(int userId, string password);
+    Task<bool> DeleteUserAsync(string userId);
     
-    Task<Result<User>> Login(string login, string password);
-    Task<Result<Boolean>> ChangePassword(int userId, string oldPassword, string newPassword);
-    Task<Result<Boolean>> ResetPassword(int userId, string password);
-    Task<Result<Boolean>> ChangeEmail(int userId, string email);
-    Task<Result<Boolean>> ChangeName(int userId, string name);
+    Task<bool> CheckPassword(User user, string password);
+    
+    Task<Result<Boolean>> ChangePassword(string userId, string oldPassword, string newPassword);
+    Task<Result<Boolean>> ResetPassword(string userId, string password);
+    Task<Result<Boolean>> ChangeEmail(string userId, string email);
+    Task<Result<Boolean>> ChangeName(string userId, string name);
     
     
     //todo user data, user profile - odnośnie modelu uzytkownika dane o jego postepach w nauce itp.
+   
+    
 }

@@ -45,40 +45,40 @@ public class MockQuestionRepository : IQuestionRepository
            UpdateAsync(subQuestion);
      }
     
-    public  Task<Result<Question>> UpdateAsync(Question question)
+    public async Task<Question?> UpdateAsync(Question question)
     {
         _questions[question.Id] = question;
-        return Task.FromResult(Result<Question>.Success(question));
+        return question;
     }
 
-    public Task RemoveAsync(Question question)
+    public async Task RemoveAsync(Question question)
     {
         _questions.Remove(question.Id);
-        return Task.FromResult(question);
+        
     }
 
-    public Task<Result<Question>> RemoveAsync(int id)
+    public async Task<Question?> RemoveAsync(int id)
     {
         var removed = _questions[id];
         _questions.Remove(id);
-        return Task.FromResult(Result<Question>.Success(removed));
+        return removed;
     }
 
-    public Task<Result<Question>> GetByIdAsync(int id)
+    public async Task<Question?> GetByIdAsync(int id)
     {
-        return Task.FromResult( Result<Question>.Success(_questions[id]));
+        return _questions[id];
     }
 
-    public Task<Result<IEnumerable<Question>>> GetAll()
+    public async Task<IEnumerable<Question>?> GetAll()
     {
-        return Task.FromResult(Result<IEnumerable<Question>>.Success(_questions.Values));
+        return _questions.Values;
     }
 
-    public Task<Result<IEnumerable<Question>>> GetAllByIdsAsync(int[] ids)
+    public async Task<IEnumerable<Question>?> GetAllByIdsAsync(int[] ids)
     {
         List<Question> questions = [];
         questions.AddRange(ids.Select(key => _questions[key]));
 
-        return Task.FromResult(Result<IEnumerable<Question>>.Success(questions));
+        return questions;
     }
 }

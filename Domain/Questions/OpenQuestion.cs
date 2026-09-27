@@ -1,8 +1,11 @@
 ﻿namespace Domain.Questions;
 
-public class OpenQuestion(int id) : Question(id, QuestionType.Open)
+public class OpenQuestion : Question
 {
-    //todo
+    public OpenQuestion()
+    {
+        Type =  QuestionType.Closed;
+    }
     public override bool CheckAnswers(string[] answer)
     {
         throw new NotImplementedException();
