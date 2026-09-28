@@ -25,7 +25,7 @@ public class RefreshEndpoint(RefreshTokenService refreshTokenService, JwtTokenSe
        var newToken = tokenService.GenerateToken(token.User, roles);
        
        var response = new RefreshResponse(newToken, rawToken);
-
+       await Send.OkAsync(response, ct);
     }
 
     public override void Configure()
