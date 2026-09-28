@@ -7,6 +7,7 @@ using Domain.Users;
 using Domain.Util;
 using FastEndpoints;
 using Infrastructure.Services;
+using Infrastructure.Services.Tokens;
 using Microsoft.AspNetCore.Identity;
 
 namespace Api.Endpoints.Users;
@@ -16,9 +17,9 @@ public record RegisterRequest(string Email, string Password, string Username,
     Language Language, 
     [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Country Country);
-public record RegisterResponse(string Token, UserDto User, List<string> Roles);
+public record RegisterResponse(string Token, string RefreshToken, UserDto User, List<string> Roles);
 
-public class RegisterUserEndpoint(IUserService userService, JwtTokenService tokenService) : Endpoint<RegisterRequest, Result<RegisterResponse>>
+public class RegisterUserEndpoint(IUserService userService, JwtTokenService tokenService, RefreshTokenService refreshTokenService) : Endpoint<RegisterRequest, Result<RegisterResponse>>
 {
     public override void Configure()
     {
@@ -52,7 +53,8 @@ public class RegisterUserEndpoint(IUserService userService, JwtTokenService toke
         var roles = await  userService.GetRolesAsync(user);
         var enumerable = roles.ToList();
         var token = tokenService.GenerateToken(createdUser, enumerable);
-        await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, UserMapper.CreateUserDto(createdUser), enumerable)), ct);
+        var refreshToken = await refreshTokenService.LoginRefreshToken(user);
+        await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken,  UserMapper.CreateUserDto(createdUser), enumerable)), ct);
         
     }
     

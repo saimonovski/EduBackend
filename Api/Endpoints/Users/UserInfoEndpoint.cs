@@ -5,12 +5,14 @@ using FastEndpoints;
 
 namespace Api.Endpoints;
 
+public record UserInfoResponse(string Username, string Email);
 
-    public class UserInfoEndpoint(IUserService userService) : EndpointWithoutRequest
+    public class UserInfoEndpoint(IUserService userService) : EndpointWithoutRequest<UserInfoResponse>
     {
         public override void Configure()
         {
-            Get("/api/users/me");
+            Get("/api/users/profile");
+            Roles("User");
         }
 
         public override async Task HandleAsync(CancellationToken ct)
@@ -32,7 +34,7 @@ namespace Api.Endpoints;
             
             
             
-            await Send.OkAsync(UserMapper.CreateUserDto(user), ct);
+            await Send.OkAsync(new UserInfoResponse(user.UserName, user.Email), ct);
         }
     }
     
