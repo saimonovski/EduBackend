@@ -53,11 +53,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
      {
          await userManager.AddToRoleAsync(user, User.UserRole);
      }
-
-     if (user.Email == "szymontokarski@onet.eu")
-     {
-         await userManager.AddToRoleAsync(user, User.AdminRole);
-     }
+     
      return correct;
     }
     
