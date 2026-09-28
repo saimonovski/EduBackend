@@ -32,7 +32,7 @@ builder.Services.AddSwaggerDocument();
 builder.Services
     .AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseSqlite("Data Source=app.db");
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     })
     .AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
