@@ -53,7 +53,7 @@ public class RegisterUserEndpoint(IUserService userService, JwtTokenService toke
         var roles = await  userService.GetRolesAsync(user);
         var enumerable = roles.ToList();
         var token = tokenService.GenerateToken(createdUser, enumerable);
-        var refreshToken = await refreshTokenService.LoginRefreshToken(user);
+        var refreshToken = await refreshTokenService.LoginRefreshToken(user, ct);
         await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken,  UserMapper.CreateUserDto(createdUser), enumerable)), ct);
         
     }

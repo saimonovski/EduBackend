@@ -10,9 +10,9 @@ public class RefreshToken
 {
     
     public Guid Id { get; } = Guid.NewGuid();
-    public User User { get; set; }
+    public required  User User { get; set; }
     
-    public string TokenHash { get; set; }
+    public required string TokenHash { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime ExpiresAt { get; set; } = DateTime.UtcNow.AddDays(14);

@@ -25,7 +25,7 @@ public record UserInfoResponse(string Username, string Email);
                 return;
             }
 
-            var user = await userService.FindUserByIdlAsync(id);
+            var user = await userService.FindUserByIdAsync(id);
             if (user == null)
             {
                 await Send.UnauthorizedAsync(ct);

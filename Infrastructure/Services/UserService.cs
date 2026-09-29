@@ -15,7 +15,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
        
     }
 
-    public async Task<User?> FindUserByIdlAsync(string userId)
+    public async Task<User?> FindUserByIdAsync(string userId)
     {
         return await userManager.FindByIdAsync(userId);
     }
@@ -25,12 +25,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
         return await userManager.GetRolesAsync(user);
     }
 
-    public Task<List<User>> GetAllUsersAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async  Task<Result<User>> CreateUserAsync(User user, string password)
+    public async Task<Result<User>> CreateUserAsync(User user, string password)
     {
      var result = await userManager.CreateAsync(user, password);
      await userManager.AddToRoleAsync(user, User.UserRole);
@@ -46,7 +41,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
     }
     
     
-    public async Task<Boolean> CheckPassword(User user, string password)
+    public async Task<bool> CheckPasswordAsync(User user, string password)
     {
      var correct = await userManager.CheckPasswordAsync(user, password);
      if (!await userManager.IsInRoleAsync(user, User.UserRole))
@@ -56,24 +51,17 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
      
      return correct;
     }
-    
-    public Task<Result<bool>> ChangePassword(string userId, string oldPassword, string newPassword)
+
+    public async Task<bool> LoginUser(User user, string password, CancellationToken ct =default)
     {
-        throw new NotImplementedException();
+       var correctPassword = await CheckPasswordAsync(user, password);
+       if (!correctPassword)
+       {
+           return false;
+       }
+       user.UserData.LastLoggedInAt =  DateTime.UtcNow;
+       dbContext.Update(user); 
+       return true;
     }
 
-    public Task<Result<bool>> ResetPassword(string userId, string password)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<bool>> ChangeEmail(string userId, string email)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Result<bool>> ChangeName(string userId, string name)
-    {
-        throw new NotImplementedException();
-    }
 }

@@ -28,8 +28,7 @@ public class LoginUserEndpoint(IUserService userService, JwtTokenService jwtToke
             await Send.UnauthorizedAsync(ct);
             return;
         }
-        
-        var correct = await  userService.CheckPassword(user, loginUserRequest.Password);
+        var correct = await  userService.LoginUser(user, loginUserRequest.Password, ct);
         if (!correct)
         {
             await Send.UnauthorizedAsync(ct);
@@ -39,7 +38,7 @@ public class LoginUserEndpoint(IUserService userService, JwtTokenService jwtToke
         var roles = await userService.GetRolesAsync(user);
         
         var token = jwtTokenService.GenerateToken(user, roles);
-        var refreshToken = await refreshTokenService.LoginRefreshToken(user);
+        var refreshToken = await refreshTokenService.LoginRefreshToken(user, ct);
      
         await Send.OkAsync((new LoginResponse(token, refreshToken, UserMapper.CreateUserDto(user))), ct);
     }

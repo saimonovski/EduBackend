@@ -29,11 +29,11 @@ public class RefreshTokenService(ApplicationDbContext dbContext)
         dbContext.RefreshTokens.Remove(token);
     }
 
-    public async Task<string> RotateRefreshTokenAsync(RefreshToken token)
+    public async Task<string> RotateRefreshTokenAsync(RefreshToken token, CancellationToken ct = default)
     {
-        var newToken = CreateRefreshToken(token.User);
+        var newToken = await CreateRefreshToken(token.User, ct);
         RemoveToken(token);
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(ct);
         return newToken.RawToken;
     }
     
@@ -46,7 +46,7 @@ public class RefreshTokenService(ApplicationDbContext dbContext)
         return hashedToken;
     }
 
-    private (string RawToken, RefreshToken RefreshToken) CreateRefreshToken(User user)
+    private async Task<(string RawToken, RefreshToken RefreshToken) >CreateRefreshToken(User user, CancellationToken ct)
     {
         var rawToken = GenerateRefreshToken();
         var refreshToken = new RefreshToken()
@@ -54,14 +54,15 @@ public class RefreshTokenService(ApplicationDbContext dbContext)
             User = user,
             TokenHash = HashToken(rawToken),
         };
-        dbContext.RefreshTokens.Add(refreshToken);
+        await dbContext.RefreshTokens.AddAsync(refreshToken,ct);
         return (rawToken,refreshToken);
     }
 
-    public async Task<string>  LoginRefreshToken(User user)
+    public async Task<string> LoginRefreshToken(User user, CancellationToken ct)
     {
-        var (rawToken, _) = CreateRefreshToken(user);
-        await dbContext.SaveChangesAsync();
+        var (rawToken, _) =  await CreateRefreshToken(user, ct);
+        
+        await dbContext.SaveChangesAsync(ct);
         return rawToken;
     }
 }
