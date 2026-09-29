@@ -204,6 +204,12 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastLoggedInAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("UserCountry")
                         .HasColumnType("int");
 
