@@ -40,6 +40,7 @@ builder.Services
 // --------------------
 // Services
 // --------------------
+builder.Services.AddHostedService<TokenCleanupService>();
 
 builder.Services.AddSingleton<IQuestionRepository, MockQuestionRepository>();
 
@@ -47,6 +48,8 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
+
+
 
 // --------------------
 // JWT configuration
