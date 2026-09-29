@@ -17,13 +17,13 @@ public record RegisterRequest(string Email, string Password, string Username,
     Language Language, 
     [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Country Country);
-public record RegisterResponse(string Token, string RefreshToken, UserDto User, List<string> Roles);
+public record RegisterResponse(string Token, string RefreshToken);
 
 public class RegisterUserEndpoint(IUserService userService, JwtTokenService tokenService, RefreshTokenService refreshTokenService) : Endpoint<RegisterRequest, Result<RegisterResponse>>
 {
     public override void Configure()
     {
-        Post("api/users/register");
+        Post("api/auth/register");
         AllowAnonymous();
     }
 
@@ -42,7 +42,7 @@ public class RegisterUserEndpoint(IUserService userService, JwtTokenService toke
         };
         
         var result = await userService.CreateUserAsync(user, userRequest.Password);
-        
+        //409 - dla istniejacego konta
         if(!result.IsSuccess)
         {
             await Send.ResponseAsync(Result<RegisterResponse>.Failure(result.ErrorMessage), 400, ct);
@@ -54,7 +54,7 @@ public class RegisterUserEndpoint(IUserService userService, JwtTokenService toke
         var enumerable = roles.ToList();
         var token = tokenService.GenerateToken(createdUser, enumerable);
         var refreshToken = await refreshTokenService.LoginRefreshToken(user, ct);
-        await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken,  UserMapper.CreateUserDto(createdUser), enumerable)), ct);
+        await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken)), ct);
         
     }
     

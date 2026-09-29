@@ -33,7 +33,6 @@ public record UserInfoResponse(string Username, string Email);
             }
             
             
-            
             await Send.OkAsync(new UserInfoResponse(user.UserName, user.Email), ct);
         }
     }

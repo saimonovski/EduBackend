@@ -10,13 +10,13 @@ namespace Api.Endpoints.Users;
 
 
 public record LoginRequest(string Password, string Email);
-public record LoginResponse(string Token, string RefreshToken, UserDto User);
+public record LoginResponse(string Token, string RefreshToken);
 
 public class LoginUserEndpoint(IUserService userService, JwtTokenService jwtTokenService, RefreshTokenService refreshTokenService) : Endpoint<LoginRequest, LoginResponse>
 {
     public override void Configure()
     {
-        Post("api/users/login/");
+        Post("api/auth/login/");
         AllowAnonymous();
     }
 
@@ -40,6 +40,6 @@ public class LoginUserEndpoint(IUserService userService, JwtTokenService jwtToke
         var token = jwtTokenService.GenerateToken(user, roles);
         var refreshToken = await refreshTokenService.LoginRefreshToken(user, ct);
      
-        await Send.OkAsync((new LoginResponse(token, refreshToken, UserMapper.CreateUserDto(user))), ct);
+        await Send.OkAsync((new LoginResponse(token, refreshToken)), ct);
     }
 }

@@ -20,7 +20,7 @@ public class RefreshEndpoint(RefreshTokenService refreshTokenService, JwtTokenSe
        }
 
       
-       var rawToken = await refreshTokenService.RotateRefreshTokenAsync(token);
+       var rawToken = await refreshTokenService.RotateRefreshTokenAsync(token, ct);
        var roles = await userService.GetRolesAsync(token.User);
        var newToken = tokenService.GenerateToken(token.User, roles);
        
@@ -30,7 +30,7 @@ public class RefreshEndpoint(RefreshTokenService refreshTokenService, JwtTokenSe
 
     public override void Configure()
     {
-        Post("api/users/refresh");
+        Post("api/auth/refresh");
         AllowAnonymous();
     }
 }
