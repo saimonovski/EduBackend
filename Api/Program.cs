@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Application.Interfaces;
+using Application.Questions;
 using Application.Users;
 using Domain.Users;
 using EduBackend_Test;
@@ -15,6 +15,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // --------------------
 // FastEndpoints
@@ -144,6 +155,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Questions;
 using Infrastructure.Services;
 
 namespace EduBackend_Test.ClosedQuestionTests;

@@ -3,7 +3,7 @@ using FastEndpoints;
 using Infrastructure.Services;
 using Infrastructure.Services.Tokens;
 
-namespace Api.Endpoints.Users;
+namespace Api.Endpoints.Auth;
 
 public record RefreshRequest(string RefreshToken);
 public record RefreshResponse(string Token, string RefreshToken);

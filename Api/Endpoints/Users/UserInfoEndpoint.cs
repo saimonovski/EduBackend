@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
-using Application.Mappings;
 using Application.Users;
 using FastEndpoints;
 
-namespace Api.Endpoints;
+namespace Api.Endpoints.Users;
 
 public record UserInfoResponse(string Username, string Email);
 

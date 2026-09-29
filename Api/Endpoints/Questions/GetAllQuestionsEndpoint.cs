@@ -1,5 +1,5 @@
-﻿using Application.Interfaces;
-using Application.Mappings;
+﻿using Application.Mappings;
+using Application.Questions;
 using FastEndpoints;
 
 namespace Api.Endpoints.Questions;

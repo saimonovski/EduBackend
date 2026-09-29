@@ -1,16 +1,13 @@
-﻿using System.Security.Cryptography;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Application.Entity;
-using Application.Mappings;
 using Application.Users;
 using Domain.Users;
 using Domain.Util;
 using FastEndpoints;
 using Infrastructure.Services;
 using Infrastructure.Services.Tokens;
-using Microsoft.AspNetCore.Identity;
 
-namespace Api.Endpoints.Users;
+namespace Api.Endpoints.Auth;
 
 public record RegisterRequest(string Email, string Password, string Username,
     [property: JsonConverter(typeof(JsonStringEnumConverter))]

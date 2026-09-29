@@ -1,7 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using Application.Entity;
-using Application.Interfaces;
 using Domain.Questions;
 using Domain.Users;
 using Domain.Util;

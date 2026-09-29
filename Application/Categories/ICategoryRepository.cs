@@ -1,7 +1,6 @@
-﻿using Application.Entity;
-using Domain.Categories;
+﻿using Domain.Categories;
 
-namespace Application.Interfaces;
+namespace Application.Categories;
 
 public interface ICategoryRepository
 {

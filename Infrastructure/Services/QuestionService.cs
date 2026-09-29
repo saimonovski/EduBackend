@@ -1,6 +1,6 @@
 ﻿
 using Application.Entity;
-using Application.Interfaces;
+using Application.Questions;
 using Domain.Categories;
 using Domain.Questions;
 

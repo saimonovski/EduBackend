@@ -2,7 +2,7 @@
 using Domain.Categories;
 using Domain.Questions;
 
-namespace Application.Interfaces;
+namespace Application.Questions;
 
 public interface IQuestionService
 {

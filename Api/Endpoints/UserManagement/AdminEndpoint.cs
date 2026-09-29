@@ -1,7 +1,6 @@
-﻿using Domain.Users;
-using FastEndpoints;
+﻿using FastEndpoints;
 
-namespace Api.Pages.Admin;
+namespace Api.Endpoints.UserManagement;
 
 public class AdminDashboardEndpoint : EndpointWithoutRequest
 {

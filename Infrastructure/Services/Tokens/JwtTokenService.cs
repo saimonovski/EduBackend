@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Domain.Users;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.Tokens;
 
 
 public class JwtTokenService(IConfiguration configuration)

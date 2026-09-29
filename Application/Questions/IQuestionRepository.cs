@@ -1,7 +1,6 @@
-﻿using Application.Entity;
-using Domain.Questions;
+﻿using Domain.Questions;
 
-namespace Application.Interfaces;
+namespace Application.Questions;
 
 public interface IQuestionRepository
 {

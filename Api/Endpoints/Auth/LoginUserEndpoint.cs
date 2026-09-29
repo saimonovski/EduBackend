@@ -1,12 +1,9 @@
-﻿using Application.Entity;
-using Application.Mappings;
-using Application.Users;
-using Domain.Users;
+﻿using Application.Users;
 using FastEndpoints;
 using Infrastructure.Services;
 using Infrastructure.Services.Tokens;
 
-namespace Api.Endpoints.Users;
+namespace Api.Endpoints.Auth;
 
 
 public record LoginRequest(string Password, string Email);
