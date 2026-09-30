@@ -18,10 +18,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("Frontend", policy =>
+    options.AddPolicy("FlutterDev", policy =>
     {
         policy
-            .WithOrigins()
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+    options.AddPolicy("FlutterProd", policy =>
+    {
+        policy
+            .WithOrigins("https://eduapp.net")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -153,9 +160,8 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-
+app.UseCors("FlutterDev");
 app.UseHttpsRedirection();
-app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
