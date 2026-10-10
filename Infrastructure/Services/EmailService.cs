@@ -1,21 +1,40 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
 using Resend;
 using Resend;
 namespace Infrastructure.Services;
 
 public class EmailService(IConfiguration configuration)
 {
-public async Task SendEmail(string email, string code)
+public async Task SendEmail(string email, string code, CancellationToken ct = default)
 {
-    IResend resend = ResendClient.Create( "re_eoL856oq_CG4E2s94fjMx4CxgBG22zif2" );
-
-    var resp = await resend.EmailSendAsync( new EmailMessage()
+    var apiToken = configuration["ResendApi:ApiKey"];
+    if (apiToken == null)
     {
-        From = "onboarding@resend.dev",
-        To = "saimonovski069@gmail.com",
-        Subject = "DoMat weryfikacja",
-        HtmlBody = "<h1> DoMat - Weryfikacja</h1> <br> Już prawie to masz wprowadż następujący kod weryfikacyjny w aplikacji <br> <h2> <code>"+code+"</code>",
-    } );
+        throw new Exception("Resend API Key not found");
+    }
+    
+    IResend resend = ResendClient.Create( apiToken);
+    
+    var http = new HttpClient();
+    http.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue("Bearer", apiToken);
+
+    var payload = new
+    {
+        to = new[] { email },
+        template = new
+        {
+            id = "verification-template", // ID lub alias szablonu
+            variables = new Dictionary<string, object>
+            {
+                ["CODE"] = code
+            }
+        }
+    };
+
+   await http.PostAsJsonAsync("https://api.resend.com/emails", payload, cancellationToken: ct);
 
 }
 }
