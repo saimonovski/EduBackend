@@ -25,6 +25,7 @@ public class LoginUserEndpoint(IUserService userService, JwtTokenService jwtToke
             await Send.UnauthorizedAsync(ct);
             return;
         }
+        
         var correct = await  userService.LoginUser(user, loginUserRequest.Password, ct);
         if (!correct)
         {

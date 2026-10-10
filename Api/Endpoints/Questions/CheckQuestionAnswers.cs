@@ -1,11 +1,12 @@
-﻿using Application.Entity;
+﻿using System.Security.Claims;
+using Application.Entity;
 using Application.Questions;
 using FastEndpoints;
 
 namespace Api.Endpoints.Questions;
 
 
-public  record CheckerRequest(Dictionary<int, string[]> QuestionsAnswers, int UserId);
+public  record CheckerRequest(Dictionary<int, string[]> QuestionsAnswers,  float? ResponseTime);
 
 public class CheckQuestionAnswersEndpoint(IQuestionService service)
     : Endpoint<CheckerRequest, Result<Dictionary<int, bool>>>
@@ -14,12 +15,17 @@ public class CheckQuestionAnswersEndpoint(IQuestionService service)
     public override void Configure()
     {
         Post("api/questions/check-answers");
-        AllowAnonymous();
+        Roles("User");
     }
 
     public override async Task HandleAsync(CheckerRequest checkerRequest, CancellationToken ct)
     {
-        
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (id == null)
+        {
+            await Send.ErrorsAsync(400, ct);
+            return;
+        }
         
         var result = await service.CheckAnswersAsync(checkerRequest.QuestionsAnswers);
         

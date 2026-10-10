@@ -25,12 +25,17 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
         return await userManager.GetRolesAsync(user);
     }
 
-    public async Task<Result<User>> CreateUserAsync(User user, string password)
+    public async Task<(User?, List<IdentityError>)> CreateUserAsync(User user, string password)
     {
-     var result = await userManager.CreateAsync(user, password);
-     await userManager.AddToRoleAsync(user, User.UserRole);
-     
-     return result.Succeeded ? Result<User>.Success(user)  : Result<User>.Failure(result.Errors.Select(e => e.Description).ToArray());
+        var result = await userManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, User.UserRole);
+            return (user, []);
+        }
+
+
+        return (null, result.Errors.ToList());
     }
 
 
@@ -44,10 +49,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
     public async Task<bool> CheckPasswordAsync(User user, string password)
     {
      var correct = await userManager.CheckPasswordAsync(user, password);
-     if (!await userManager.IsInRoleAsync(user, User.UserRole))
-     {
-         await userManager.AddToRoleAsync(user, User.UserRole);
-     }
+    
      
      return correct;
     }
@@ -60,7 +62,6 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
            return false;
        }
        user.UserData.LastLoggedInAt =  DateTime.UtcNow;
-       dbContext.Update(user); 
        return true;
     }
 

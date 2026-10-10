@@ -53,7 +53,8 @@ builder.Services
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     })
     .AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 // --------------------
 // Services
@@ -66,6 +67,7 @@ builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
+builder.Services.AddScoped<EmailService>();
 
 
 

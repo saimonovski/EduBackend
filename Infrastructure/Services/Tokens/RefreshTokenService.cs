@@ -65,4 +65,19 @@ public class RefreshTokenService(ApplicationDbContext dbContext)
         await dbContext.SaveChangesAsync(ct);
         return rawToken;
     }
+
+    public async Task DeactivateToken(string refreshToken, CancellationToken ct)
+    {
+        var hashed = HashToken(refreshToken);
+        await dbContext.RefreshTokens.Where(t => t.TokenHash.Equals(hashed)).ExecuteDeleteAsync(ct);
+    }
+
+    public async Task DeactivateAllTokens(string? id, CancellationToken ct)
+    {
+        if ( id is null)
+        {
+            return;
+        }
+        await dbContext.RefreshTokens.Where(t => t.User.Id.Equals(id)).ExecuteDeleteAsync(ct);
+    }
 }

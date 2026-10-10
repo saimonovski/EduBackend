@@ -12,10 +12,8 @@ namespace Application.Mappings;
 public record UserDto(
     string? Username,
     string? Email,
-    [property: JsonConverter(typeof(JsonStringEnumConverter))]
-    Language UserLanguage,
-    [property: JsonConverter(typeof(JsonStringEnumConverter))]
-    Country UserCountry
+    bool emailVerified,
+    UserData? UserData
 );
 
 
@@ -26,8 +24,8 @@ public static class UserMapper
         return new UserDto(
             user.UserName,
             user.Email,
-            user.UserData.UserLanguage,
-            user.UserData.UserCountry
+            user.EmailConfirmed,
+            user.UserData
         );
     }
     

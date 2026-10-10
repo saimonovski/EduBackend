@@ -6,6 +6,7 @@ using Domain.Util;
 using FastEndpoints;
 using Infrastructure.Services;
 using Infrastructure.Services.Tokens;
+using Microsoft.AspNetCore.Identity;
 
 namespace Api.Endpoints.Auth;
 
@@ -16,7 +17,7 @@ public record RegisterRequest(string Email, string Password, string Username,
     Country Country);
 public record RegisterResponse(string Token, string RefreshToken);
 
-public class RegisterUserEndpoint(IUserService userService, JwtTokenService tokenService, RefreshTokenService refreshTokenService) : Endpoint<RegisterRequest, Result<RegisterResponse>>
+public class RegisterUserEndpoint(UserManager<User> userManager,IUserService userService, JwtTokenService tokenService, RefreshTokenService refreshTokenService, EmailService emailService) : Endpoint<RegisterRequest, Result<RegisterResponse>>
 {
     public override void Configure()
     {
@@ -38,19 +39,27 @@ public class RegisterUserEndpoint(IUserService userService, JwtTokenService toke
             }
         };
         
-        var result = await userService.CreateUserAsync(user, userRequest.Password);
+        var (resultUser, errors) = await userService.CreateUserAsync(user, userRequest.Password);
         //409 - dla istniejacego konta
-        if(!result.IsSuccess)
+        if(resultUser is null)
         {
-            await Send.ResponseAsync(Result<RegisterResponse>.Failure(result.ErrorMessage), 400, ct);
+           await Send.ErrorsAsync(409, ct);
+            //todo send error
             return;
         }
-
-        var createdUser = result.Value!;
+        //todo generate and send code to user
         var roles = await  userService.GetRolesAsync(user);
         var enumerable = roles.ToList();
-        var token = tokenService.GenerateToken(createdUser, enumerable);
+        var token = tokenService.GenerateToken(resultUser, enumerable);
         var refreshToken = await refreshTokenService.LoginRefreshToken(user, ct);
+        
+        var code = await userManager.GenerateTwoFactorTokenAsync(
+            user,
+            TokenOptions.DefaultEmailProvider
+        );
+
+        await emailService.SendEmail(userRequest.Email, code);
+        
         await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken)), ct);
         
     }

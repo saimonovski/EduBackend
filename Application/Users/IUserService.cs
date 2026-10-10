@@ -2,6 +2,7 @@
 using Domain.Categories;
 using Domain.Questions;
 using Domain.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Users;
 
@@ -12,7 +13,7 @@ public interface IUserService
      Task<User?> FindUserByEmailAsync(string userEmail);
      Task<User?> FindUserByIdAsync(string userId);
 
-     Task<Result<User>> CreateUserAsync(User user, string password);
+     Task<(User?, List<IdentityError>)> CreateUserAsync(User user, string password);
     
     Task<bool> DeleteUserAsync(string userId);
     
