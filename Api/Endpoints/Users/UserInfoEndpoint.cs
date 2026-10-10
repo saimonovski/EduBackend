@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Application.Mappings;
 using Application.Users;
 using FastEndpoints;
 
@@ -6,7 +7,7 @@ namespace Api.Endpoints.Users;
 
 public record UserInfoResponse(string Username, string Email);
 
-    public class UserInfoEndpoint(IUserService userService) : EndpointWithoutRequest<UserInfoResponse>
+    public class UserInfoEndpoint(IUserService userService) : EndpointWithoutRequest<UserDto>
     {
         public override void Configure()
         {
@@ -32,7 +33,7 @@ public record UserInfoResponse(string Username, string Email);
             }
             
             
-            await Send.OkAsync(new UserInfoResponse(user.UserName, user.Email), ct);
+            await Send.OkAsync(UserMapper.CreateUserDto(user), ct);
         }
     }
     
