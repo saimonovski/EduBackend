@@ -9,6 +9,9 @@ public class UserData
     public Language UserLanguage { get; set; } = Language.Pl;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime LastLoggedInAt { get; set; } = DateTime.UtcNow;
+    public Level ClassLevel { get; set; } = Level.Grade4;
+    public Gender Gender { get; set; } = Gender.Male;
     
-    
+
+
 }

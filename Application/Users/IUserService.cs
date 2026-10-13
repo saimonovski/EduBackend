@@ -26,4 +26,5 @@ public interface IUserService
 
 
     Task<bool> LoginUser(User user, string password, CancellationToken ct = default);
+    Task UpdateUserAsync(User user, CancellationToken ct);
 }

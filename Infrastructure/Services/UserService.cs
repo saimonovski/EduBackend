@@ -38,7 +38,11 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
         return (null, result.Errors.ToList());
     }
 
-
+    public async Task UpdateUserAsync(User user, CancellationToken ct)
+    {
+        dbContext.Update(user);
+      await  dbContext.SaveChangesAsync(ct);
+    }
 
     public Task<bool> DeleteUserAsync(string userId)
     {
