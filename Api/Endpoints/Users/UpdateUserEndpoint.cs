@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.Json.Serialization;
 using Application.Users;
 using Domain.Users;
 using Domain.Util;
@@ -7,9 +8,13 @@ using FastEndpoints;
 namespace Api.Endpoints.Users;
 
 public record UpdateUserRequest(
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Country? UserCountry,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Language? UserLanguage,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Level? ClassLevel,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     Gender? Gender
 )
 {
