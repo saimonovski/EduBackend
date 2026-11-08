@@ -40,6 +40,7 @@ public class RegisterUserEndpoint(UserManager<User> userManager,IUserService use
         };
         
         var (resultUser, errors) = await userService.CreateUserAsync(user, userRequest.Password);
+        
         //409 - dla istniejacego konta
         if(resultUser is null)
         {

@@ -1,9 +1,8 @@
 using System.Text;
 using System.Text.Json.Serialization;
-using Application.Questions;
+using Application.LearningModel;
 using Application.Users;
 using Domain.Users;
-using EduBackend_Test;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Infrastructure;
@@ -40,7 +39,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerDocument();
+builder.Services.AddSwaggerDocument().AddFastEndpoints().AddHealthChecks();
 
 // --------------------
 // Database + Identity
@@ -61,14 +60,13 @@ builder.Services
 // --------------------
 builder.Services.AddHostedService<TokenCleanupService>();
 
-builder.Services.AddSingleton<IQuestionRepository, MockQuestionRepository>();
 
-builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<RefreshTokenService>();
 builder.Services.AddScoped<EmailService>();
-
+builder.Services.AddScoped<ILearningSessionService, LearningSessionService>();
+builder.Services.AddHttpClient();
 
 
 // --------------------

@@ -1,18 +1,17 @@
-﻿using Domain.Questions;
+﻿using Api.Endpoints.Learn;
+using Domain.Questions;
 using Domain.Users;
 
 namespace Domain.LearningModel;
 
-public class LearningSession
+public class LearningSession()
 {
-    public Guid Id { get; init; }
+    public string Id  { get; set; }
     public string UserId { get; set; }
-    public int SessionTime { get; set; } //In minutes
-    /*
-     * Zapisujemy tylko te zadania 
-     */
+    public string Category { get; set; }
     
-    public List<Milestone> Milestones { get; set; } = [];
+    public List<TaskParserUtil.SimplifiedTask> Tasks { get; set; } = [];
+    public string PresentationId { get; set; }
 }
 
 public class Milestone

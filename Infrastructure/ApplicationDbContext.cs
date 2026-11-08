@@ -1,4 +1,5 @@
 ﻿using Domain.Categories;
+using Domain.LearningModel;
 using Domain.Questions;
 using Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,8 +9,7 @@ namespace Infrastructure;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
 {
-    public DbSet<Question> Questions => Set<Question>();
-    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<LearningSession>  LearningSessions { get; set; }
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     
     protected override void OnModelCreating(ModelBuilder builder)

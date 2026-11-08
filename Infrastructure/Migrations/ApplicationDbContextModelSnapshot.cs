@@ -22,30 +22,70 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Categories.Category", b =>
+            modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+OptionItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)")
+                        .HasJsonPropertyName("id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("SimplifiedTaskId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasJsonPropertyName("text");
 
-                    b.Property<string>("Description")
+                    b.HasKey("Id");
+
+                    b.HasIndex("SimplifiedTaskId");
+
+                    b.ToTable("OptionItem");
+                });
+
+            modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+SimplifiedTask", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LearningSessionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PresentationId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("TaskType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("LearningSessionId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("SimplifiedTask");
+                });
+
+            modelBuilder.Entity("Domain.LearningModel.LearningSession", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PresentationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LearningSessions");
                 });
 
             modelBuilder.Entity("Domain.Questions.Question", b =>
@@ -80,7 +120,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Question");
 
                     b.HasDiscriminator().HasValue("Question");
 
@@ -382,11 +422,18 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("OpenQuestion");
                 });
 
-            modelBuilder.Entity("Domain.Categories.Category", b =>
+            modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+OptionItem", b =>
                 {
-                    b.HasOne("Domain.Categories.Category", null)
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId");
+                    b.HasOne("Api.Endpoints.Learn.TaskParserUtil+SimplifiedTask", null)
+                        .WithMany("Options")
+                        .HasForeignKey("SimplifiedTaskId");
+                });
+
+            modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+SimplifiedTask", b =>
+                {
+                    b.HasOne("Domain.LearningModel.LearningSession", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("LearningSessionId");
                 });
 
             modelBuilder.Entity("Domain.Questions.Question", b =>
@@ -475,9 +522,14 @@ namespace Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Categories.Category", b =>
+            modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+SimplifiedTask", b =>
                 {
-                    b.Navigation("SubCategories");
+                    b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("Domain.LearningModel.LearningSession", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("Domain.Questions.Question", b =>
