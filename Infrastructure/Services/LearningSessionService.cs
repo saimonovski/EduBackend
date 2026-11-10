@@ -12,7 +12,7 @@ namespace Infrastructure.Services;
 
 public class LearningSessionService(IConfiguration configuration, ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory) : ILearningSessionService
 {
-    private const string LearningModelApiUrl = "http://127.0.0.1:8000/api/v1";
+    private const string LearningModelApiUrl = "https://domatapp-learningmodel.onrender.com/api/v1";
     private const string EducationStage = "primary school";
     private const string CurriculumLevel = "STANDARD";
     private const string LearningPlansEndpoint = "/learning-plans";

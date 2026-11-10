@@ -41,14 +41,12 @@ public class RegisterUserEndpoint(UserManager<User> userManager,IUserService use
         
         var (resultUser, errors) = await userService.CreateUserAsync(user, userRequest.Password);
         
-        //409 - dla istniejacego konta
         if(resultUser is null)
         {
            await Send.ErrorsAsync(409, ct);
-            //todo send error
+           
             return;
         }
-        //todo generate and send code to user
         var roles = await  userService.GetRolesAsync(user);
         var enumerable = roles.ToList();
         var token = tokenService.GenerateToken(resultUser, enumerable);
@@ -59,7 +57,7 @@ public class RegisterUserEndpoint(UserManager<User> userManager,IUserService use
             TokenOptions.DefaultEmailProvider
         );
 
-        await emailService.SendEmail(userRequest.Email, code);
+        await emailService.SendEmail(userRequest.Email, code, ct);
         
         await Send.OkAsync(Result<RegisterResponse>.Success(new RegisterResponse(token, refreshToken)), ct);
         
