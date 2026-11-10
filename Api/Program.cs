@@ -131,7 +131,8 @@ builder.Services
 // ====================
 
 var app = builder.Build();
-
+//to change below
+app.UseSwaggerGen();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerGen();
