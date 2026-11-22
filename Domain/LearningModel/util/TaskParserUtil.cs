@@ -36,7 +36,8 @@ namespace Api.Endpoints.Learn
                             TaskId = wrapper.Data.TaskId,
                             PresentationId = wrapper.Data.PresentationId,
                             TaskType = wrapper.Data.TaskType,
-                            Options = wrapper.Data.Options ?? new List<OptionItem>()
+                            Options = wrapper.Data.Options ?? new List<OptionItem>(),
+                            Question = wrapper.Data.Statement
                         };
                     }
                     else if (wrapper?.Event == "error")
@@ -63,6 +64,7 @@ namespace Api.Endpoints.Learn
         {
             public Guid Id { get; set; } = Guid.NewGuid();
             public string TaskId { get; set; }
+            public string Question { get; set; }
             public string PresentationId { get; set; }
             public string TaskType { get; set; }
             public List<OptionItem> Options { get; set; }
@@ -86,6 +88,7 @@ namespace Api.Endpoints.Learn
             [JsonPropertyName("task_id")] public string TaskId { get; set; }
             [JsonPropertyName("presentation_id")] public string PresentationId { get; set; }
             [JsonPropertyName("task_type")] public string TaskType { get; set; }
+            [JsonPropertyName("statement")] public string Statement { get; set; }
             [JsonPropertyName("options")] public List<OptionItem> Options { get; set; }
         }
 
