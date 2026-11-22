@@ -28,8 +28,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasJsonPropertyName("id");
 
-                    b.Property<string>("SimplifiedTaskId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("SimplifiedTaskId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -45,13 +45,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Api.Endpoints.Learn.TaskParserUtil+SimplifiedTask", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LearningSessionId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PresentationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaskId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

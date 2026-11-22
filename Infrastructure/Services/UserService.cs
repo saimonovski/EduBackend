@@ -28,14 +28,11 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
     public async Task<(User?, List<IdentityError>)> CreateUserAsync(User user, string password)
     {
         var result = await userManager.CreateAsync(user, password);
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(user, User.UserRole);
-            return (user, []);
-        }
+        if (!result.Succeeded) return (null, result.Errors.ToList());
+        await userManager.AddToRoleAsync(user, User.UserRole);
+        return (user, []);
 
 
-        return (null, result.Errors.ToList());
     }
 
     public async Task UpdateUserAsync(User user, CancellationToken ct)
@@ -44,10 +41,7 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
       await  dbContext.SaveChangesAsync(ct);
     }
 
-    public Task<bool> DeleteUserAsync(string userId)
-    {
-        throw new NotImplementedException();
-    }
+ 
     
     
     public async Task<bool> CheckPasswordAsync(User user, string password)
@@ -69,4 +63,9 @@ public class UserService(UserManager<User> userManager, ApplicationDbContext dbC
        return true;
     }
 
+    public async Task RemoveUserAsync(User user, CancellationToken ct)
+    {
+        dbContext.Remove(user);
+        await dbContext.SaveChangesAsync(ct);
+    }
 }

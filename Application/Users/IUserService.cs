@@ -15,7 +15,6 @@ public interface IUserService
 
      Task<(User?, List<IdentityError>)> CreateUserAsync(User user, string password);
     
-    Task<bool> DeleteUserAsync(string userId);
     
     Task<bool> CheckPasswordAsync(User user, string password);
     
@@ -27,4 +26,5 @@ public interface IUserService
 
     Task<bool> LoginUser(User user, string password, CancellationToken ct = default);
     Task UpdateUserAsync(User user, CancellationToken ct);
+    Task RemoveUserAsync(User user, CancellationToken ct);
 }

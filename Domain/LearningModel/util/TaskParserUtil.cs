@@ -33,7 +33,7 @@ namespace Api.Endpoints.Learn
                     {
                         parsedTask = new SimplifiedTask
                         {
-                            Id = wrapper.Data.TaskId,
+                            TaskId = wrapper.Data.TaskId,
                             PresentationId = wrapper.Data.PresentationId,
                             TaskType = wrapper.Data.TaskType,
                             Options = wrapper.Data.Options ?? new List<OptionItem>()
@@ -61,7 +61,8 @@ namespace Api.Endpoints.Learn
 
         public class SimplifiedTask
         {
-            public string Id { get; set; }
+            public Guid Id { get; set; } = Guid.NewGuid();
+            public string TaskId { get; set; }
             public string PresentationId { get; set; }
             public string TaskType { get; set; }
             public List<OptionItem> Options { get; set; }

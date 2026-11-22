@@ -161,8 +161,9 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-app.UseCors("FlutterDev");
+
 app.UseHttpsRedirection();
+app.UseCors("FlutterDev");
 app.UseAuthentication();
 app.UseAuthorization();
 

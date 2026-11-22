@@ -45,7 +45,7 @@ public class StartSessionEndpoint(IUserService userService, ILearningSessionServ
 
         await learningSessionService.EndLearningSession(id, ct);
         var category = req.CategoryId;
-        var grade = user.UserData.ClassLevel;
+       
         
         var (statusCode, learningSession) = await learningSessionService.CreateLearningSession(user, category, ct);
         if (statusCode != 200 ||  learningSession == null)

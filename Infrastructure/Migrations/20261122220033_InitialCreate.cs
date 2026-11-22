@@ -26,23 +26,17 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "LearningSessions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PresentationId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Categories_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id");
+                    table.PrimaryKey("PK_LearningSessions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,7 +58,11 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserCountry = table.Column<int>(type: "int", nullable: false),
-                    UserLanguage = table.Column<int>(type: "int", nullable: false)
+                    UserLanguage = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastLoggedInAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClassLevel = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,7 +91,27 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "SimplifiedTask",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TaskId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PresentationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TaskType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LearningSessionId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SimplifiedTask", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SimplifiedTask_LearningSessions_LearningSessionId",
+                        column: x => x.LearningSessionId,
+                        principalTable: "LearningSessions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Question",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -108,17 +126,17 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
+                    table.PrimaryKey("PK_Question", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Questions_QuestionMetadata_MetadataId",
+                        name: "FK_Question_QuestionMetadata_MetadataId",
                         column: x => x.MetadataId,
                         principalTable: "QuestionMetadata",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Questions_Questions_QuestionId",
+                        name: "FK_Question_Question_QuestionId",
                         column: x => x.QuestionId,
-                        principalTable: "Questions",
+                        principalTable: "Question",
                         principalColumn: "Id");
                 });
 
@@ -152,6 +170,24 @@ namespace Infrastructure.Migrations
                         principalTable: "UserData",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OptionItem",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SimplifiedTaskId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OptionItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OptionItem_SimplifiedTask_SimplifiedTaskId",
+                        column: x => x.SimplifiedTaskId,
+                        principalTable: "SimplifiedTask",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -304,24 +340,29 @@ namespace Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_CategoryId",
-                table: "Categories",
-                column: "CategoryId");
+                name: "IX_OptionItem_SimplifiedTaskId",
+                table: "OptionItem",
+                column: "SimplifiedTaskId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_MetadataId",
-                table: "Questions",
+                name: "IX_Question_MetadataId",
+                table: "Question",
                 column: "MetadataId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_QuestionId",
-                table: "Questions",
+                name: "IX_Question_QuestionId",
+                table: "Question",
                 column: "QuestionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SimplifiedTask_LearningSessionId",
+                table: "SimplifiedTask",
+                column: "LearningSessionId");
         }
 
         /// <inheritdoc />
@@ -343,10 +384,10 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "OptionItem");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Question");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");
@@ -355,10 +396,16 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "SimplifiedTask");
+
+            migrationBuilder.DropTable(
                 name: "QuestionMetadata");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "LearningSessions");
 
             migrationBuilder.DropTable(
                 name: "UserData");

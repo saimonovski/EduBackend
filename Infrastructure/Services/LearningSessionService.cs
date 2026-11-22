@@ -94,7 +94,7 @@ public class LearningSessionService(IConfiguration configuration, ApplicationDbC
 
     public async Task<bool> EndLearningSession(string userId, CancellationToken ct)
     {
-        var learningSession = await dbContext.LearningSessions
+        var learningSession = await dbContext.LearningSessions.Include(ls => ls.Tasks)
             .FirstOrDefaultAsync(ls => ls.UserId == userId, ct);
         if (learningSession == null)
         {
