@@ -14,12 +14,8 @@ using Application.LearningModel;
 
 namespace Api.Endpoints.Learn;
 
-public record StartSessionRequest(string CategoryId);
+public record StartSessionRequest(string CategoryId, List<string> Topics);
 public record StartSessionResponse(TaskParserUtil.SimplifiedTask Task);
-
-
-
-
 
 public class StartSessionEndpoint(IUserService userService, ILearningSessionService learningSessionService) : Endpoint<StartSessionRequest, StartSessionResponse>
 {
